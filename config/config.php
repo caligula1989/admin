@@ -67,6 +67,8 @@ function before($route)
   if (!isset($_SESSION['mainDomain']))
     $_SESSION['mainDomain'] = exec('cat /usr/share/yunohost/yunohost-config/others/current_host');
 
+  /* TEMP BY JOSH */
+  $_SESSION['domain'] = 'yunohost.org';
   $ldap = new YunohostLdap('localhost', $_SESSION['domain'], dirname(__FILE__).'/../models');
 
 
@@ -210,4 +212,10 @@ function sendMail ($mail, $subject, $txtMessage, $htmlMessage = null) {
   $message.= $lineBreak."--".$boundary."--".$lineBreak;
    
   return mail($mail, $subject, $message, $header);
+}
+
+function printArray($array = array()){
+  print "<pre>";
+  print_r($array);
+  print "</pre>";
 }

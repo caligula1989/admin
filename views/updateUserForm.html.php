@@ -53,7 +53,7 @@
 		    <p class="row">
 			    <div class="span3">
 				    <label class="span2 labeladmin" style="text-align: right" for="isadmin"><strong><?php echo T_('Administrator') ?></strong></label>
-				    <input class="span1" style="margin: 2px 0 0 10px;" type="checkbox" name="isadmin" id="isadmin" <?php if ('admin' === $user['description']) echo 'checked'; ?> />
+				    <input class="span1" style="margin: 2px 0 0 10px;" type="checkbox" name="isadmin" id="isadmin" <?php if (isset($user['description']) && ('admin' === $user['description'])) echo 'checked'; ?> />
 			    </div>
 		    </p>
 		    <div style="clear: both; height: 20px;"></div>

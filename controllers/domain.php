@@ -30,9 +30,9 @@ function domains () {
  * GET /domain/list
  */
 function listDomains () {
-  global $ldap;
+
+  $domains = get_domain_list();
   
-  $domains = $ldap->findAll('(objectClass=mailDomain)');
   set('domains', $domains);
   set('mainDomain', $_SESSION['mainDomain']);
   set('title', T_('List of domains'));
@@ -47,7 +47,7 @@ function updateDomains () {
 
   $error = false;
   
-  foreach ($_POST['domains'] as $domain) {
+ foreach ($_POST['domains'] as $domain) {
     if (!empty($domain)) {
       $domains[] = htmlspecialchars($domain);
       foreach ($_POST['actualDomains'] as $key => $actualDomain) {
@@ -82,8 +82,9 @@ function updateDomains () {
  * GET /domain/changeMain
  */
 function changeMainForm () {
-  global $ldap;
-  $domains = $ldap->findAll('(objectClass=mailDomain)');
+  
+  $domains = get_domain_list();
+
   set('domains', $domains);
   set('mainDomain', $_SESSION['mainDomain']);
   set('title', T_('Change main domain'));
@@ -94,9 +95,27 @@ function changeMainForm () {
  * PUT /domain/changeMain
  */
 function changeMain () {
+  global $moulinette;
   $domain = htmlspecialchars($_POST['domain']);
-  exec('sudo yunohost change-domain '. $_SESSION['mainDomain'] .' '.$domain);
-  $_SESSION['mainDomain'] = $domain;
-  flash('success', T_('Main domain successfully changed.'));
+  $res = $moulinette->execute("tools",'maindomain -n '.$domain);
+  if($res['return']){
+    $_SESSION['mainDomain'] = $domain;
+    flash('success', T_('Main domain successfully changed.'));
+  } else {
+    flash('error', T_('A problem occured while changing main domain.'));
+  }
   redirect_to('/domain/list');
+}
+
+
+function get_domain_list(){
+  global $moulinette;
+  $temp_domains = $moulinette->execute("domain","list");
+  if($temp_domains['return']){
+    foreach($temp_domains['message'] as $domain => $arr){
+      $domains[] = $arr[0];
+    }
+  }
+  
+  return $domains;
 }

@@ -32,9 +32,9 @@
 			    <label class="span2 labeluser" for="domain"><?php echo T_('New') ?></label>
 			    <select class="span3" style="" type="text" name="domain" id="domain">
 			    	<?php foreach ($domains as $domain) { 
-			    			if ($domain['virtualdomain'] != $mainDomain) {
+			    			if ($domain != $mainDomain) {
 			    		?>
-				  		<option value="<?php echo $domain['virtualdomain'] ?>"><?php echo $domain['virtualdomain'] ?></option>
+				  		<option value="<?php echo $domain ?>"><?php echo $domain ?></option>
 				  	<?php }} ?>
 				</select> 
 		    </p>
